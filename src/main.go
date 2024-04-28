@@ -11,40 +11,47 @@ import (
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	var nivelHeroi string
-
-	fmt.Print("Informe o nome do herói: ")
+	fmt.Print("Informe a quantidade de vitórias: ")
 	scanner.Scan()
-	var nomeHeroi string = scanner.Text()
-
-	fmt.Print("Informe o xp do herói: ")
-	scanner.Scan()
-	xpHeroiString := scanner.Text()
-	xpHeroi, erro := strconv.ParseUint(xpHeroiString, 10, 64)
-
+	_vitorias := scanner.Text()
+	vitorias, erro := strconv.ParseUint(_vitorias, 10, 64)
 	if erro != nil {
-		log.Fatal("Ocorreu um erro ao tentar converter o xp do herói!")
+		log.Fatal("Ocorreu um erro ao tentar converter as vitórias!")
 	}
 
+	fmt.Print("Informe a quantidade de derrotas: ")
+	scanner.Scan()
+	_derrotas := scanner.Text()
+	derrotas, erro := strconv.ParseUint(_derrotas, 10, 64)
+	if erro != nil {
+		log.Fatal("Ocorreu um erro ao tentar converter as derrotas!")
+	}
+
+	totalVitorias := calculaRank(uint32(vitorias), uint32(derrotas))
+	rank := retornaRank(totalVitorias)
+
+	fmt.Printf("\n O Herói tem de saldo de **{%d}** está no nível de **{%s}** \n", totalVitorias, rank)
+}
+
+func calculaRank(vitorias, derrotas uint32) uint32 {
+	return vitorias - derrotas
+}
+
+func retornaRank(vitorias uint32) string {
 	switch {
-	case xpHeroi <= 1000:
-		nivelHeroi = "Ferro"
-	case xpHeroi >= 1001 && xpHeroi <= 2000:
-		nivelHeroi = "Bronze"
-	case xpHeroi >= 2001 && xpHeroi <= 5000:
-		nivelHeroi = "Prata"
-	case xpHeroi >= 5001 && xpHeroi <= 7000:
-		nivelHeroi = "Ouro"
-	case xpHeroi >= 7001 && xpHeroi <= 8000:
-		nivelHeroi = "Platina"
-	case xpHeroi >= 8001 && xpHeroi <= 9000:
-		nivelHeroi = "Ascendente"
-	case xpHeroi >= 9001 && xpHeroi <= 10000:
-		nivelHeroi = "Imortal"
-	case xpHeroi >= 10001:
-		nivelHeroi = "Radiante"
-
+	case vitorias <= 10:
+		return "Ferro"
+	case vitorias >= 11 && vitorias <= 20:
+		return "Bronze"
+	case vitorias >= 21 && vitorias <= 50:
+		return "Prata"
+	case vitorias >= 51 && vitorias <= 80:
+		return "Ouro"
+	case vitorias >= 81 && vitorias <= 90:
+		return "Diamante"
+	case vitorias >= 91 && vitorias <= 100:
+		return "Lendário"
+	default:
+		return "Imortal"
 	}
-
-	fmt.Printf("\n O Herói de nome **{%s}** está no nível de **{%s}** \n", nomeHeroi, nivelHeroi)
 }
